@@ -205,3 +205,27 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Large data files - DO NOT commit to GitHub
+data/raw/*.csv
+data/raw/*.xlsx
+data/raw/*.zip
+data/raw/*.parquet
+*.csv
+
+# Allow documentation
+!data/raw/README.md
+
+# Python environment
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# System files
+.DS_Store
+Thumbs.db

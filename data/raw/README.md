@@ -2,13 +2,13 @@
 
 ## Lightcast Job Postings Data
 
-- **File**: `[filename].csv`
+- **File**: `lightcast_job_postings.csv`
 - **Source**: Lightcast Platform
-- **Date Downloaded**: 2024-10-04
+- **Date Downloaded**: 2025-10-04
 - **Time Period**: January - September 2024
 - **Description**: Job posting data including location, industry, skills, and remote work status
-- **Size**: [XX MB, XX rows]
-- **Downloaded by**: [Group 09]
+- **Size**: 684 MB (12,955,715 rows)
+- **Downloaded by**: Thomas Primero
 
 ## Data Dictionary
 
@@ -36,5 +36,5 @@
 
 ## Access
 
-- Data source URL: [if applicable]
+- Data source URL: https://drive.google.com/uc?id=1V2GCHGt2dkFGqVBeoUFckU4IhUgk4ocQ
 - Contact for data access: [email]
