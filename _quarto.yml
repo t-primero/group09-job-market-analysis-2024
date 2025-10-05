@@ -1,0 +1,29 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Geographic & Remote Work Analysis"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: geographic_trends.qmd
+        text: Geographic Trends
+      - href: remote_work_trends.qmd
+        text: Remote Work
+      - href: tech_hubs_analysis.qmd
+        text: Tech Hubs
+      - href: urban_rural_comparison.qmd
+        text: Urban vs Rural
+      - href: about.qmd
+        text: About
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    code-fold: true
+    csl: csl/econometrica.csl
