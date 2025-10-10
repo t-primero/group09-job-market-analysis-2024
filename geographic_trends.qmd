@@ -1,0 +1,22 @@
+---
+title: "Geographic Trends in Remote vs Onsite Job Markets"
+format: html
+---
+
+## Setup
+
+```{python}
+from pyspark.sql import SparkSession, functions as F
+import seaborn as sns, matplotlib.pyplot as plt
+sns.set(style="whitegrid")
+
+try:
+    df
+except NameError:
+    spark = SparkSession.builder.appName("EDA").getOrCreate()
+    df = (spark.read.option("header","true")
+                 .option("inferSchema","true")
+                 .option("multiLine","true")
+                 .option("escape","\"")
+                 .csv("./lightcast_job_postings.csv"))
+```
