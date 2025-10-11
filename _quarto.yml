@@ -5,24 +5,24 @@ project:
 website:
   title: "Geographic & Remote Work Analysis"
   navbar:
-  left:
-    - href: index.qmd
-      text: "Home"
-    - href: introduction.qmd
-      text: "Introduction"
-    - href: data_cleaning.qmd/ipynb
-      text: "Data Cleaning & Exploration"
-    - href: eda.qmd/ipynb
-      text: "Exploratory Data Analysis"
-    - href: skill_gap_analysis.qmd
-      text: "Skill Gap Analysis"
-    - href: ml_methods.qmd/ipynb
-      text: "ML Methods"
-    - href: nlp_methods.qmd/ipynb
-      text: "NLP Methods"
-    - href: about.qmd
-      text: "About"
-
+    left:
+      - href: index.qmd
+        text: "Home"
+      - href: introduction.qmd
+        text: "Introduction"
+      - href: data_cleaning.qmd
+        text: "Data Cleaning & Exploration"
+      - href: geographic_trends.qmd
+        text: "Geographic Trends"
+      - href: skill_gap_analysis.qmd
+        text: "Skill Gap Analysis"
+      - href: ml_methods.qmd
+        text: "ML Methods"
+      - href: nlp_methods.qmd
+        text: "NLP Methods"
+      - href: about.qmd
+        text: "About"
+        
 bibliography: references.bib
 
 format:
