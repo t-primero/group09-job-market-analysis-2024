@@ -31,3 +31,8 @@ format:
     toc: true
     code-fold: true
     csl: csl/econometrica.csl
+
+execute:
+  echo: true
+  eval: true
+  code-overflow: wrap
