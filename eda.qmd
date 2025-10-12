@@ -80,3 +80,56 @@ df.groupBy("CITY_NAME","STATE_NAME").count().orderBy(desc("count")).show(20, tru
 df.groupBy("STATE_NAME").avg("SALARY").orderBy(desc("avg(SALARY)")).show(20, truncate=False)
 ```
 
+```{python}
+from pyspark.sql.functions import col, count, sum as _sum, when, to_date, year, month, desc
+
+# Parse posting date if available
+date_col = "POSTED_DATE"
+if date_col in df.columns:
+    df = df.withColumn(date_col, to_date(col(date_col)))
+    df = df.withColumn("YEAR", year(col(date_col))).withColumn("MONTH", month(col(date_col)))
+
+# Flag AI vs non AI using title and description keywords
+ai_patterns = ["ai","artificial intelligence","machine learning","ml","deep learning","nlp","computer vision","llm","genai","gen ai","data scientist","ml engineer"]
+def mk_like(c):
+    expr = None
+    for p in ai_patterns:
+        cond = col(c).rlike(f"(?i)\\b{p}\\b")
+        expr = cond if expr is None else (expr | cond)
+    return expr
+
+ai_flag = None
+if "TITLE" in df.columns:
+    ai_flag = mk_like("TITLE")
+if "JOB_DESCRIPTION" in df.columns:
+    ai_desc = mk_like("JOB_DESCRIPTION")
+    ai_flag = ai_desc if ai_flag is None else (ai_flag | ai_desc)
+
+if ai_flag is not None:
+    df = df.withColumn("IS_AI_ROLE", when(ai_flag, 1).otherwise(0))
+else:
+    df = df.withColumn("IS_AI_ROLE", when(col("TITLE").isNotNull(), 0).otherwise(0))
+
+# Remote share by state
+state_remote = df.groupBy("STATE_NAME","REMOTE_TYPE").count().orderBy(desc("count"))
+state_remote.show(30, truncate=False)
+
+# Top states by postings
+state_totals = df.groupBy("STATE_NAME").count().orderBy(desc("count"))
+state_totals.show(30, truncate=False)
+
+# AI vs non AI counts by state
+ai_state = df.groupBy("STATE_NAME").agg(_sum("IS_AI_ROLE").alias("ai_posts"), (count("*") - _sum("IS_AI_ROLE")).alias("non_ai_posts"))
+ai_state.orderBy(desc("ai_posts")).show(30, truncate=False)
+
+# Monthly trend of remote vs onsite overall
+if "YEAR" in df.columns and "MONTH" in df.columns:
+    monthly_remote = df.groupBy("YEAR","MONTH","REMOTE_TYPE").count().orderBy("YEAR","MONTH","REMOTE_TYPE")
+    monthly_remote.show(60, truncate=False)
+
+# Salary by state for AI vs non AI
+if "SALARY" in df.columns:
+    from pyspark.sql.functions import avg
+    sal_by_state_ai = df.groupBy("STATE_NAME","IS_AI_ROLE").agg(avg("SALARY").alias("avg_salary")).orderBy(desc("avg_salary"))
+    sal_by_state_ai.show(30, truncate=False)
+    ```
