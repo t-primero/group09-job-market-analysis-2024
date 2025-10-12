@@ -1,1 +1,82 @@
+---
+title: "EDA"
+format: html
+execute:
+  echo: true
+  warning: false
+---
+
+```{python}
+from pyspark.sql import SparkSession
+spark = SparkSession.builder.appName("JobPostingsEDA").getOrCreate()
+df = spark.read.option("header","true").option("inferSchema","true") \
+    .option("multiLine","true").option("escape","\"") \
+    .csv("data/lightcast_job_postings.csv")
+df.cache()
+df.count()
+```
+
+```{python}
+from pyspark.sql.functions import when, col, trim
+from pyspark.sql.types import IntegerType, FloatType
+
+cols_blank = ["CITY_NAME","STATE_NAME","REMOTE_TYPE","MIN_EDULEVELS",
+              "SALARY","SALARY_FROM","SALARY_TO",
+              "MIN_YEARS_EXPERIENCE","MAX_YEARS_EXPERIENCE"]
+for c in cols_blank:
+    if c in df.columns:
+        df = df.withColumn(c, when(trim(col(c)) == "", None).otherwise(col(c)))
+
+df = df.withColumn("REMOTE_TYPE", col("REMOTE_TYPE").cast(IntegerType())) \
+       .withColumn("MIN_EDULEVELS", col("MIN_EDULEVELS").cast(IntegerType())) \
+       .withColumn("SALARY", col("SALARY").cast(FloatType())) \
+       .withColumn("SALARY_FROM", col("SALARY_FROM").cast(FloatType())) \
+       .withColumn("SALARY_TO", col("SALARY_TO").cast(FloatType())) \
+       .withColumn("MIN_YEARS_EXPERIENCE", col("MIN_YEARS_EXPERIENCE").cast(FloatType())) \
+       .withColumn("MAX_YEARS_EXPERIENCE", col("MAX_YEARS_EXPERIENCE").cast(FloatType()))
+
+df = df.withColumn(
+    "REMOTE_TYPE",
+    when(col("REMOTE_TYPE") == 1, "Remote")
+    .when(col("REMOTE_TYPE") == 2, "Onsite")
+    .when(col("REMOTE_TYPE") == 3, "Hybrid")
+    .otherwise("Onsite")
+)
+
+df = df.withColumn(
+    "MIN_EDULEVELS",
+    when(col("MIN_EDULEVELS").isin(0,1,99), "Associate or lower")
+    .when(col("MIN_EDULEVELS") == 2, "Bachelor")
+    .when(col("MIN_EDULEVELS") == 3, "Master's")
+    .when(col("MIN_EDULEVELS") == 4, "PhD")
+    .otherwise("Associate or lower")
+)
+
+df = df.withColumn("CITY_NAME", when(col("CITY_NAME").isNull(), "No City").otherwise(col("CITY_NAME")))
+df = df.withColumn("STATE_NAME", when(col("STATE_NAME").isNull(), "No State").otherwise(col("STATE_NAME")))
+
+df = df.withColumn(
+    "SALARY",
+    when(col("SALARY").isNull() & col("SALARY_FROM").isNotNull() & col("SALARY_TO").isNotNull(),
+         (col("SALARY_FROM") + col("SALARY_TO"))/2.0
+    ).otherwise(col("SALARY"))
+)
+df.count()
+```
+
+```{python}
+df.write.mode("overwrite").parquet("data/clean_job_postings.parquet")
+```
+
+```{python}
+# Remote share by state
+state_remote = df.groupBy("STATE_NAME","REMOTE_TYPE").count()
+state_remote.orderBy(desc("count")).show(20, truncate=False)
+
+# Top cities by postings
+df.groupBy("CITY_NAME","STATE_NAME").count().orderBy(desc("count")).show(20, truncate=False)
+
+# Salary by state
+df.groupBy("STATE_NAME").avg("SALARY").orderBy(desc("avg(SALARY)")).show(20, truncate=False)
+```
 
