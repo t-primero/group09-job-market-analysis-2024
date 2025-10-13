@@ -236,3 +236,5 @@ lightcast_job_postings.csv!RandomForest.ipynb
 /.quarto/
 data/clean_job_postings.parquet/
 docs/
+data/clean_job_postings.parquet/
+docs/
