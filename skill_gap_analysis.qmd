@@ -1,0 +1,56 @@
+---
+title: Skill Gap Analysis
+subtitle: Compare the skills required in IT job postings against the actual skills of your group members to identify knowledge gaps and areas for improvement.
+author:
+  - name:
+      - Thomas Primero
+    affiliations:
+      - id: bu
+        name: Boston University
+        city: Boston
+        state: MA
+  - name:
+      - Fayobomi Olusola-Falodun
+    affiliations:
+      - ref: bu
+bibliography: references.bib
+csl: csl/econometrica.csl
+format:
+  html:
+    toc: true
+    number-sections: true
+    df-print: paged
+jupyter: python3
+---
+
+**Objective:** Compare the skills required in IT job postings against the actual skills of your group members to identify knowledge gaps and areas for improvement.
+
+## Create a team-based skill dataframe
+
+Each team member should list their current skills relevant to their selected IT career path.
+Use a numerical scale (1-5) to indicate proficiency levels:
+
+Note: Each team member has been given a fictional score, to demonstrate the variations in expertise level.
+
+- 1 = Beginner
+- 2 = Basic knowledge
+- 3 = Intermediate
+- 4 = Advanced
+- 5 = Expert
+
+```{python}
+import pandas as pd
+
+skills_data = {
+    "Name": ["Thomas", "Fayobomi", "Dominique", "Aryan"],
+    "Python": [1, 2, 4, 5],
+    "SQL": [2, 3, 3, 4],
+    "Machine Learning": [1, 2, 4, 4],
+    "Cloud Computing": [1, 2, 3, 5]
+}
+
+df_skills = pd.DataFrame(skills_data)
+df_skills.set_index("Name", inplace=True)
+df_skills
+
+```
