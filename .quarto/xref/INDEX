@@ -1,0 +1,23 @@
+{
+  "data_analysis.qmd": {
+    "data_analysis.html": "4bcaf023"
+  },
+  "remote_work_trends.qmd": {
+    "remote_work_trends.html": "e0f73151"
+  },
+  "tech_hubs_analysis.qmd": {
+    "tech_hubs_analysis.html": "d74d3756"
+  },
+  "about.qmd": {
+    "about.html": "fb980a3b"
+  },
+  "urban_rural_comparison.qmd": {
+    "urban_rural_comparison.html": "525965d1"
+  },
+  "geographic_trends.qmd": {
+    "geographic_trends.html": "a3375a9e"
+  },
+  "index.qmd": {
+    "index.html": "c4a31059"
+  }
+}

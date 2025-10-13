@@ -10,20 +10,10 @@ website:
         text: "Home"
       - href: introduction.qmd
         text: "Introduction"
-      - href: geographic_trends.qmd
-        text: "Geographic Trends"
-      - href: remote_work_trends.qmd
-        text: "Remote Work Trends"
-      - href: tech_hubs_analysis.qmd
-        text: "Tech Hubs Analysis"
-      - href: urban_rural_comparison.qmd
-        text: "Urban vs Rural"
       - href: skill_gap_analysis.qmd
         text: "Skill Gap Analysis"
-      - href: ml_methods.qmd
-        text: "ML Methods"
-      - href: nlp_methods.qmd
-        text: "NLP Methods"
+      - href: RandomForest.ipynb
+        text: "Random Forest"
       - href: about.qmd
         text: "About"
 
