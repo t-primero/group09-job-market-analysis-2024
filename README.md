@@ -44,7 +44,7 @@ Visit our interactive analysis: **[https://t-primero.github.io/group09-job-marke
 ---
 
 ## 📁 Repository Structure
-
+```
 group09-job-market-analysis-2024/
 │
 ├── data/                           # Data files
@@ -54,14 +54,14 @@ group09-job-market-analysis-2024/
 │
 ├── figures/                        # Generated visualizations and plots
 │
-├── csl/                           # Citation style files
+├── csl/                            # Citation style files
 │   └── econometrica.csl
 │
 ├── index.qmd                      # Project homepage
-├── geographic_trends.qmd          # Geographic analysis page
-├── remote_work_trends.qmd         # Remote work analysis page
-├── tech_hubs_analysis.qmd         # Tech hubs analysis page
-├── urban_rural_comparison.qmd     # Urban vs rural analysis page
+├── eda.qmd                        # Improving EDA page
+├── geographic_trends.qmd          # Remote work analysis page
+├── RandomForest.ipynb             # Regression, classification, topic insights & NLP analysis
+├── skill_gap_analysis.qmd         # Skilly gap analysis page
 ├── about.qmd                      # About the team
 │
 ├── _quarto.yml                    # Quarto configuration
@@ -69,3 +69,4 @@ group09-job-market-analysis-2024/
 │
 ├── .gitignore                     # Git ignore rules
 └── README.md                      # This file
+```
