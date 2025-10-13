@@ -33,17 +33,18 @@ Visit our interactive analysis: **[https://t-primero.github.io/group09-job-marke
 
 ## 👥 Team Members
 
-| Name | Role | Focus Area | GitHub |
-|------|------|------------|--------|
-| [Member 1 Name] | Project Lead / Data Cleaning | Main dataset preparation | [@username](https://github.com/username) |
-| [Member 2 Name] | Geographic Analyst | State & city job growth analysis | [@username](https://github.com/username) |
-| [Member 3 Name] | Remote Work Analyst | Remote work trend analysis | [@username](https://github.com/username) |
-| [Member 4 Name] | Tech Hub Analyst | Tech hub vs. emerging markets | [@username](https://github.com/username) |
-| [Member 5 Name] | Urban/Rural Analyst | Urban vs. rural comparison | [@username](https://github.com/username) |
+| Name | Focus Area | GitHub |
+|------|------------|--------|
+| Thomas Primero | GitHub Repository Set-Up / Quarto Structure / Final Report | [@t-primero](https://github.com/t-primero) |
+| Fayobomi Olusola-Falodun | Data Cleaning & Processing / Improving EDA / Skill Gap Analysis | [@fayobomiof](https://github.com/fayobomiof) |
+| Dominique Strong | Data Cleaning & Processing / Regression, Classification / NLP Analysis | [@DomStrong11](https://github.com/DomStrong11) |
+| Aryan Lokagariwar | Final Report | [@ar3573](https://github.com/ar3573) |
+
 
 ---
 
 ## 📁 Repository Structure
+
 group09-job-market-analysis-2024/
 │
 ├── data/                           # Data files
