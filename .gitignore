@@ -240,3 +240,5 @@ data/clean_job_postings.parquet/
 docs/
 data/clean_job_postings.parquet/
 docs/
+.quarto/
+..bfg-report/
