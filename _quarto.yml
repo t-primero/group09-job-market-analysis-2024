@@ -10,9 +10,13 @@ website:
         text: "Home"
       - href: introduction.qmd
         text: "Introduction"
+      - href: eda.qmd
+        text: "EDA and Visualizations"
+      - href: tech_hub_analysis.qmd
+        text: "Tech Hub Analysis"
       - href: skill_gap_analysis.qmd
         text: "Skill Gap Analysis"
-      - href: RandomForest.ipynb
+      - href: RandomForest.qmd
         text: "Random Forest"
       - href: about.qmd
         text: "About"
