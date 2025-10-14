@@ -38,7 +38,7 @@ Visit our interactive analysis: **[https://t-primero.github.io/group09-job-marke
 | Thomas Primero | GitHub Repository Set-Up / Quarto Structure / Final Report | [@t-primero](https://github.com/t-primero) |
 | Fayobomi Olusola-Falodun | Data Cleaning & Processing / Improving EDA / Skill Gap Analysis | [@fayobomiof](https://github.com/fayobomiof) |
 | Dominique Strong | Data Cleaning & Processing / Regression, Classification / NLP Analysis | [@DomStrong11](https://github.com/DomStrong11) |
-| Aryan Lokagariwar | Final Report | [@ar3573](https://github.com/ar3573) |
+| Aryan Lokagariwar | Final Report | Tech-Hub Analysis | [@ar3573](https://github.com/ar3573) |
 
 
 ---
