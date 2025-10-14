@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.34">
+<meta name="generator" content="quarto-1.8.24">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>tech_hub_analysis – Geographic &amp; Remote Work Analysis</title>
+<title>Tech Hub Analysis – Geographic &amp; Remote Work Analysis</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -32,14 +32,15 @@ ul.task-list li input[type="checkbox"] {
 <meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-c8ad9e5dbd60b7b70b38521ab19b7da4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-93b10530f83a0ed64c0288fd832e80ab.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-e31584831b205ffbb2d98406f31c2a5b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -78,6 +79,8 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    </a>
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Geographic &amp; Remote Work Analysis</span>
     </a>
@@ -127,17 +130,77 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#purpose" id="toc-purpose" class="nav-link active" data-scroll-target="#purpose"><span class="header-section-number">0.1</span> Purpose</a></li>
+  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup"><span class="header-section-number">0.2</span> Setup</a></li>
+  <li><a href="#prefer-an-existing-lightcast-ai-flag-if-present-otherwise-derive-via-keywords" id="toc-prefer-an-existing-lightcast-ai-flag-if-present-otherwise-derive-via-keywords" class="nav-link" data-scroll-target="#prefer-an-existing-lightcast-ai-flag-if-present-otherwise-derive-via-keywords"><span class="header-section-number">1</span> Prefer an existing Lightcast AI flag if present; otherwise derive via keywords</a></li>
+  <li><a href="#simple-metro-label-prefer-true-msametro-if-present" id="toc-simple-metro-label-prefer-true-msametro-if-present" class="nav-link" data-scroll-target="#simple-metro-label-prefer-true-msametro-if-present"><span class="header-section-number">2</span> Simple metro label (prefer true MSA/METRO if present)</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Tech Hub Analysis</h1>
+</div>
 
 
 
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
 
 
+</header>
 
+
+<section id="purpose" class="level2" data-number="0.1">
+<h2 data-number="0.1" class="anchored" data-anchor-id="purpose"><span class="header-section-number">0.1</span> Purpose</h2>
+<p>This section evaluates whether legacy tech hubs (Bay Area, Seattle, Boston, NYC, Austin) still dominate AI hiring or whether a set of emerging hubs is gaining share. We compare posting <strong>volume</strong>, <strong>AI share</strong>, <strong>remote/hybrid availability</strong>, and <strong>median salary</strong> (when available).</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Data source:</strong> <code>data/raw/lightcast_job_postings.csv</code> (Lightcast, 2024; Jan–Sep if that’s what you downloaded).<br>
+<strong>Instructions:</strong> Make sure the CSV is at <strong><code>data/raw/lightcast_job_postings.csv</code></strong>.</p>
+</div>
+</div>
+</section>
+<section id="setup" class="level2" data-number="0.2">
+<h2 data-number="0.2" class="anchored" data-anchor-id="setup"><span class="header-section-number">0.2</span> Setup</h2>
+<p>library(tidyverse) library(lubridate) theme_set(theme_minimal(base_size = 14))</p>
+<p>path &lt;- “data/raw/lightcast_job_postings.csv” raw &lt;- read_csv(path, show_col_types = FALSE) df &lt;- raw %&gt;% rename_with(toupper) %&gt;% mutate( CITY_NAME = coalesce(CITY_NAME, CITY, NA), STATE_NAME = coalesce(STATE_NAME, STATE, NA), TITLE = coalesce(JOB_TITLE, TITLE, NA), SKILLS_TXT = coalesce(SKILLS, SKILL_TEXT, NA), POSTED = coalesce(POSTED_DATE, DATE_POSTED, as.character(NA)), POSTED = suppressWarnings(ymd(POSTED)), REMOTE_TYPE = case_when( REMOTE_TYPE %in% c(“Remote”,“REMOTE”,“remote”,“1”) ~ “Remote”, REMOTE_TYPE %in% c(“Hybrid”,“HYBRID”,“hybrid”,“3”) ~ “Hybrid”, TRUE ~ “On-site” ), SALARY = suppressWarnings(readr::parse_number(coalesce(SALARY, SALARY_TO, SALARY_FROM))) )</p>
+</section>
+<section id="prefer-an-existing-lightcast-ai-flag-if-present-otherwise-derive-via-keywords" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Prefer an existing Lightcast AI flag if present; otherwise derive via keywords</h1>
+<p>has_ai &lt;- any(names(df) %in% c(“AI_RELATED”,“AI_FLAG”)) if (!has_ai) { ai_regex &lt;- “(?i)\bAI\b|artificial intelligence|machine learning|\bML\b|deep learning|NLP|computer vision|MLOps|LLM|generative” df &lt;- df %&gt;% mutate( AI_RELATED = if_else( str_detect(coalesce(TITLE, ““), ai_regex) | str_detect(coalesce(SKILLS_TXT,”“), ai_regex), TRUE, FALSE, missing = FALSE ) ) } else { df &lt;- df %&gt;% mutate(AI_RELATED = coalesce(AI_RELATED, AI_FLAG, FALSE)) }</p>
+</section>
+<section id="simple-metro-label-prefer-true-msametro-if-present" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Simple metro label (prefer true MSA/METRO if present)</h1>
+<p>df &lt;- df %&gt;% mutate( METRO = coalesce(METRO, MSA, paste0(CITY_NAME, “,”, STATE_NAME)) %&gt;% str_trim() ) legacy_hubs &lt;- c( “San Francisco, CA”, “San Jose, CA”, “Oakland, CA”, # Bay Area proxy (simple) “Seattle, WA”, “Boston, MA”, “New York, NY”, “Austin, TX” )</p>
+<p>emerging_hubs &lt;- c( “Raleigh, NC”, “Durham, NC”, “Denver, CO”, “Boulder, CO”, “Atlanta, GA”, “Salt Lake City, UT”, “Pittsburgh, PA”, “Nashville, TN”, “Miami, FL”, “Phoenix, AZ” )</p>
+<p>df &lt;- df %&gt;% mutate( HUB_CLASS = case_when( METRO %in% legacy_hubs ~ “Legacy Hub”, METRO %in% emerging_hubs ~ “Emerging Hub”, TRUE ~ “Other” ) ) kpi &lt;- df %&gt;% filter(!is.na(METRO), !is.na(STATE_NAME)) %&gt;% mutate(REMOTE_BIN = if_else(REMOTE_TYPE %in% c(“Remote”,“Hybrid”), “Remote/Hybrid”, “On-site”)) %&gt;% group_by(HUB_CLASS) %&gt;% summarise( postings = dplyr::n(), ai_share = mean(AI_RELATED, na.rm = TRUE), remote_share = mean(REMOTE_BIN == “Remote/Hybrid”, na.rm = TRUE), med_salary = if (all(is.na(SALARY))) NA_real_ else median(SALARY, na.rm = TRUE), .groups = “drop” ) %&gt;% arrange(desc(postings))</p>
+<p>kpi kpi %&gt;% mutate(HUB_CLASS = forcats::fct_relevel(HUB_CLASS, “Legacy Hub”,“Emerging Hub”,“Other”)) %&gt;% ggplot(aes(HUB_CLASS, ai_share)) + geom_col() + scale_y_continuous(labels = scales::percent_format(accuracy = 1)) + labs(x = NULL, y = “AI Share of Postings”, title = “AI Share by Hub Class (2024)”) kpi %&gt;% mutate(HUB_CLASS = forcats::fct_relevel(HUB_CLASS, “Legacy Hub”,“Emerging Hub”,“Other”)) %&gt;% ggplot(aes(HUB_CLASS, remote_share)) + geom_col() + scale_y_continuous(labels = scales::percent_format(accuracy = 1)) + labs(x = NULL, y = “Remote/Hybrid Share”, title = “Remote Availability by Hub Class (2024)”) metro_tbl &lt;- df %&gt;% filter(HUB_CLASS != “Other”) %&gt;% group_by(METRO, HUB_CLASS) %&gt;% summarise( postings = dplyr::n(), ai_share = mean(AI_RELATED, na.rm = TRUE), remote_sh = mean(REMOTE_TYPE %in% c(“Remote”,“Hybrid”), na.rm = TRUE), med_salary = if (all(is.na(SALARY))) NA_real_ else median(SALARY, na.rm = TRUE), .groups = “drop” ) %&gt;% arrange(desc(ai_share), desc(postings)) %&gt;% slice_head(n = 12)</p>
+<p>metro_tbl metro_tbl %&gt;% ggplot(aes(reorder(METRO, ai_share), ai_share, fill = HUB_CLASS)) + geom_col() + coord_flip() + scale_y_continuous(labels = scales::percent) + labs(x = NULL, y = “AI Share of Postings”, title = “Top Metros by AI Intensity (AI Share Among Postings)”) + theme(legend.position = “top”)</p>
+
+
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -191,13 +254,14 @@ ul.task-list li input[type="checkbox"] {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
