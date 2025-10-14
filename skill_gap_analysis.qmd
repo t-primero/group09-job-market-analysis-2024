@@ -30,7 +30,7 @@ jupyter: python3
 Each team member should list their current skills relevant to their selected IT career path.
 Use a numerical scale (1-5) to indicate proficiency levels:
 
-Note: Each team member has been given a fictional score, to demonstrate the variations in expertise level.
+***Note***: Each team member has been given a fictional score to better demonstrate the variations in proficiency level.
 
 - 1 = Beginner
 - 2 = Basic knowledge
@@ -54,3 +54,44 @@ df_skills.set_index("Name", inplace=True)
 df_skills
 
 ```
+
+You can use heatmaps or any other visualizations to visualize team strengths and gaps.
+
+### 
+Visualizing Skill Gaps with Seaborn
+```{python}
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(8, 6))
+sns.heatmap(df_skills, annot=True, cmap="coolwarm", linewidths=0.5)
+plt.title("Team Skill Levels Heatmap")
+plt.show()
+```
+
+
+### Compare team skills to industry requirements
+Extract most in-demand skills from IT job postings.
+Identify gaps between team skill levels and job expectations.
+
+## Extracting Top Skills from Job Descriptions
+```{python}
+from collections import Counter
+
+#Assuming job_descriptions is a list of text from job postings
+top_skills = ["Python", "SQL", "Machine Learning", "Cloud Computing", "Docker", "AWS"]
+job_skill_counts = Counter(top_skills)
+
+# Compare with team skill levels
+for skill in top_skills:
+    if skill not in df_skills.columns:
+        df_skills[skill] = 0  # Assume no knowledge in missing skills
+
+df_skills
+
+```
+
+## Improvement Plan
+Which skills should each member prioritize learning?
+What courses or resources can help?
+How can the team collaborate to bridge skill gaps?
