@@ -1,0 +1,63 @@
+---
+title: "Research Introduction: AI vs. Non-AI Careers"
+author: "Group 09"
+date: today
+format: 
+  html:
+    bibliography: references.bib
+    csl: csl/econometrica.csl
+    toc: true
+---
+
+## Introduction
+
+The American labor market is undergoing a fundamental geographic restructuring. Factors such as the COVID-19 global pandemic have shifted the way businesses operate, the rise of Artificial Intelligence (AI) continuously impacts the labor force as it improves, and emerging tech hubs have presented competition for established tech hubs. These modern complexities raise critical questions: 
+
+- Which cities or states have the highest job growth for AI vs. non-AI careers? 
+- Are remote jobs increasing or decreasing across industries? 
+- Do tech hubs still dominate hiring, or are other locations emerging? 
+- How do urban vs. rural job markets differ for AI and non-AI careers? 
+
+This research examines job growth patterns, remote work trends, and the shifting geography of AI and non-AI careers to understand how location shapes opportunity in the evolving American economy.
+
+## Research Rationale
+
+### AI's Impact on Employment Geography
+
+@bessen2018 argues that AI's employment impact depends critically on market demand rather than automation alone. Analyzing over a century of manufacturing data, he finds that technology-driven productivity gains initially increased jobs when demand was elastic but eventually reduced employment once markets became saturated. This suggests that geographic regions where AI targets unmet needs may experience job growth, while areas where AI serves already-saturated markets face potential displacement—a distinction crucial for understanding the uneven geographic distribution of AI career opportunities.
+
+### Remote Work and Post-Pandemic Restructuring
+
+With COVID-19 disrupting various business models, American corporations had to quickly restructure operations. Five years later, COVID-19 is no longer considered a national emergency, with various public and private sector organizations implementing return-to-office (RTO) mandates [@paulino2025]. Although the trend is currently favorable for RTO policies, "smaller companies, which often cannot compete on salary alone, are increasingly embracing remote work flexibility to attract and retain top talent" [@paulino2025]. Smaller companies can use remote work policies to their advantage, whether to lower their overhead costs or retain top talent without offering as much salary compared to in-office based roles.
+
+### Emerging Tech Hubs and Geographic Concentration
+
+Tech hubs seem to be emerging in droves across various parts of America. According to @chen2024, although there are many smaller hubs forming, the Silicon Valley on the West Coast of the United States is still dominant. They explore the idea that there is a relationship between emerging tech hubs and established tech hubs: "the greatest determinant of migration is geographic proximity" [@chen2024]. Another reason for the expansion of tech hubs in the United States is "likely motivated by quality of life and cost of living" [@chen2024]. Although other tech hubs are spreading towards other regions in the United States, Silicon Valley residents shouldn't see this as a threat, since growing tech talent causes a synergy that, as a result, both grows and redistributes tech employment.
+
+### Urban-Rural Disparities in Remote Work Access
+
+Geographic location significantly shapes access to remote work opportunities, with important implications for employment equity. @paul2022 analyzes pre-pandemic travel survey data and finds that rural workers prefer but rarely access work-from-home arrangements compared to urban counterparts, primarily due to inadequate broadband infrastructure and the geographic concentration of remote-compatible jobs in metropolitan areas. The study reveals that urban workers were nearly twice as likely to have remote work options, while rural workers—particularly Hispanic rural workers—faced compounded disadvantages in accessing virtual employment. These patterns suggest that AI careers requiring advanced digital infrastructure and remote work capabilities may concentrate in urban areas unless targeted policies address rural technology access gaps.
+
+## Methodology
+
+We undertook an investigation of job posting data from January to September 2024. Our tool, Lightcast, enabled us to standardize the many titles, locations, and employer information that populated the job postings. Through that process, we also conducted a feature analysis to understand the kinds of construction that are going on for jobs requiring artificial intelligence "in both a technical and a generative sense." Overall, we read just over 22,000 job postings requiring AI-related skills. 
+
+Then on the basic level, we conducted some summary and inferential statistics to understand the kinds of pay differences that might exist among postings for AI and non-AI jobs. On another level, we ran the postings through a random-forest regressor—a kind of model that uses certain given variables to try to explain or understand what is going on with the posting salaries. The model itself has 10 different versions, and each one assigns weights to the different given variables (such as the industry in which the job is located) to come up with a predicted salary. Results should shed light on the nature of pay for AI skills in the job market and how geographic and industrial factors influence compensation patterns.
+
+## Research Questions
+
+This analysis addresses the following key questions:
+
+1. **Geographic Distribution**: Where are AI jobs concentrated, and how does this compare to non-AI career opportunities?
+
+2. **Remote Work Trends**: How have remote, hybrid, and on-site work arrangements evolved post-pandemic for AI versus non-AI positions?
+
+3. **Urban-Rural Divide**: What disparities exist between urban and rural areas in terms of AI job growth and compensation?
+
+4. **Compensation Patterns**: How do salaries for AI-related positions compare across different geographic regions and work arrangements?
+
+
+## References
+
+::: {#refs}
+:::

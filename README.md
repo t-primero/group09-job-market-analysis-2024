@@ -38,7 +38,7 @@ Visit our interactive analysis: **[https://t-primero.github.io/group09-job-marke
 | Thomas Primero | GitHub Repository Set-Up / Quarto Structure / Final Report | [@t-primero](https://github.com/t-primero) |
 | Fayobomi Olusola-Falodun | Data Cleaning & Processing / Improving EDA / Skill Gap Analysis | [@fayobomiof](https://github.com/fayobomiof) |
 | Dominique Strong | Data Cleaning & Processing / Regression, Classification / NLP Analysis | [@DomStrong11](https://github.com/DomStrong11) |
-| Aryan Lokagariwar | Final Report | Tech-Hub Analysis | [@ar3573](https://github.com/ar3573) |
+| Aryan Lokagariwar | Final Report / Tech-Hub Analysis | [@ar3573](https://github.com/ar3573) |
 
 
 ---
@@ -48,7 +48,7 @@ Visit our interactive analysis: **[https://t-primero.github.io/group09-job-marke
 group09-job-market-analysis-2024/
 │
 ├── data/                           # Data files
-│   ├── raw/                        # Original Lightcast data (not modified)
+│   ├── raw/                        # Original Lightcast data (not modified), be sure to download separately due to size
 │   ├── processed/                  # Cleaned, analysis-ready datasets
 │   └── scripts/                    # Data cleaning scripts
 │
@@ -58,11 +58,11 @@ group09-job-market-analysis-2024/
 │   └── econometrica.csl
 │
 ├── index.qmd                      # Project homepage
+├── introduction.qmd               # Research introduction page
 ├── eda.qmd                        # Improving EDA page
-├── geographic_trends.qmd          # Remote work analysis page
-├── RandomForest.ipynb             # Regression, classification, topic insights & NLP analysis
+├── tech_hub_analysis.qmd          # Tech hub analysis page
 ├── skill_gap_analysis.qmd         # Skilly gap analysis page
-├── about.qmd                      # About the team
+├── RandomForest.ipynb             # Regression, classification, topic insights & NLP analysis
 │
 ├── _quarto.yml                    # Quarto configuration
 ├── references.bib                 # Bibliography

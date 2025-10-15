@@ -9,7 +9,9 @@ website:
       - href: index.qmd
         text: "Home"
       - href: introduction.qmd
-        text: "Introduction"
+        text: "Research Introduction"
+      - href: geographic_trends.qmd
+        text: "Geographic Trends"
       - href: eda.qmd
         text: "EDA and Visualizations"
       - href: tech_hub_analysis.qmd
@@ -18,8 +20,7 @@ website:
         text: "Skill Gap Analysis"
       - href: RandomForest.qmd
         text: "Random Forest"
-      - href: about.qmd
-        text: "About"
+
 
 format:
   html:
