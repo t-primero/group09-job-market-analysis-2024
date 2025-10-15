@@ -1,22 +1,129 @@
 ---
-title: "Geographic Trends in Remote vs Onsite Job Markets"
+title: "Geographic Trends"
 format: html
+execute:
+  echo: true
+  warning: false
+jupyter: python3
 ---
-
-## Setup
 
 ```{python}
 from pyspark.sql import SparkSession, functions as F
 import seaborn as sns, matplotlib.pyplot as plt
 sns.set(style="whitegrid")
 
-try:
-    df
-except NameError:
-    spark = SparkSession.builder.appName("EDA").getOrCreate()
-    df = (spark.read.option("header","true")
-                 .option("inferSchema","true")
-                 .option("multiLine","true")
-                 .option("escape","\"")
-                 .csv("./lightcast_job_postings.csv"))
+spark = SparkSession.builder.appName("EDA").getOrCreate()
+df = spark.read.parquet("data/clean_job_postings.parquet")
+```
+
+Overview
+Geographic EDA using Lightcast cleaned Spark DataFrame df. Focus on states, remote share, salaries, and hubs.
+
+Top 10 States by Job postings
+```{python}
+state_counts = (df.groupBy("STATE_NAME")
+                  .agg(F.count("*").alias("postings"))
+                  .orderBy(F.col("postings").desc())
+                  .limit(10))
+pdf = state_counts.toPandas()
+
+plt.figure(figsize=(8,4))
+sns.barplot(data=pdf, x="postings", y="STATE_NAME", color="#4C78A8")
+plt.title("Top 10 States by Job Postings")
+plt.xlabel("Postings")
+plt.ylabel("State")
+plt.tight_layout()
+plt.show()
+```
+
+Remote vs Onsite Share by Industry
+```{python}
+remote_ind = (df.groupBy("NAICS2_NAME","REMOTE_TYPE")
+                .agg(F.count("*").alias("postings")))
+pivot = (remote_ind.groupBy("NAICS2_NAME")
+           .pivot("REMOTE_TYPE", ["Remote","Hybrid","Onsite"])
+           .sum("postings")
+           .fillna(0))
+pivot = pivot.withColumn("total", F.col("Remote")+F.col("Hybrid")+F.col("Onsite")) \
+             .withColumn("Remote_share", F.col("Remote")/F.col("total")) \
+             .orderBy(F.col("Remote_share").desc()) \
+             .limit(12)
+pdf = pivot.select("NAICS2_NAME","Remote_share").toPandas()
+
+plt.figure(figsize=(8,5))
+sns.barplot(data=pdf, x="Remote_share", y="NAICS2_NAME", color="#E45756")
+from matplotlib.ticker import FuncFormatter
+plt.gca().xaxis.set_major_formatter(FuncFormatter(lambda x,_: f"{x:.0%}"))
+plt.title("Industries with Highest Remote Share")
+plt.xlabel("Remote share")
+plt.ylabel("Industry")
+plt.tight_layout()
+plt.show()
+```
+
+Average Salary by State
+```{python}
+state_salary = (df.select("STATE_NAME","SALARY")
+                  .where(F.col("SALARY").isNotNull())
+                  .groupBy("STATE_NAME")
+                  .agg(F.count("*").alias("n_postings"),
+                       F.avg("SALARY").alias("avg_salary"),
+                       F.expr("percentile_approx(SALARY,0.5)").alias("median_salary"))
+                  .orderBy(F.col("avg_salary").desc())
+                  .limit(20))
+pdf = state_salary.toPandas()
+
+plt.figure(figsize=(9,5))
+sns.barplot(data=pdf, x="avg_salary", y="STATE_NAME", color="#72B7B2")
+plt.title("Average Salary by State")
+plt.xlabel("Average salary")
+plt.ylabel("State")
+plt.tight_layout()
+plt.show()
+```
+
+Tech Hubs vs Emerging Locations
+```{python}
+hub = (df.withColumn("hub_label",
+          F.when(F.col("STATE_NAME").isin("California","Texas","Massachusetts","Washington","New York"),
+                 F.lit("Tech Hub")).otherwise(F.lit("Emerging")))
+         .groupBy("hub_label").agg(F.count("*").alias("postings"))
+         .orderBy(F.col("postings").desc()))
+pdf = hub.toPandas()
+
+plt.figure(figsize=(5,4))
+sns.barplot(data=pdf, x="hub_label", y="postings", palette="Set2")
+plt.title("Tech Hubs vs Emerging Locations")
+plt.xlabel("")
+plt.ylabel("Postings")
+plt.tight_layout()
+plt.show()
+```
+
+Top states by postings
+
+```{python}
+top_states = df.groupBy("STATE_NAME").count().orderBy("count", ascending=False).limit(15).toPandas()
+top_states.plot(kind="barh", x="STATE_NAME", y="count", figsize=(8,6), legend=False, title="Top states by postings")
+import matplotlib.pyplot as plt
+plt.gca().invert_yaxis()
+plt.tight_layout()
+plt.show()
+```
+
+Top states by remote share
+
+```{python}
+state_remote_pdf = df.groupBy("STATE_NAME","REMOTE_TYPE").count().toPandas()
+pivot = state_remote_pdf.pivot_table(index="STATE_NAME", columns="REMOTE_TYPE", values="count", aggfunc="sum", fill_value=0)
+pivot["total"] = pivot.sum(axis=1)
+for c in ["Remote","Hybrid","Onsite"]:
+    if c not in pivot.columns:
+        pivot[c] = 0
+pivot["remote_share"] = pivot["Remote"] / pivot["total"]
+top_remote = pivot.sort_values("remote_share", ascending=False).head(15)
+
+top_remote["remote_share"].plot(kind="barh", figsize=(8,6), xlim=(0,1), title="Top states by remote share")
+plt.gca().invert_yaxis()
+plt.tight_layout()
 ```

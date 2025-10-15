@@ -235,10 +235,10 @@ lightcast_job_postings.csv!RandomForest.ipynb
 
 /.quarto/
 data/clean_job_postings.parquet/
-docs/
+!docs/
 data/clean_job_postings.parquet/
-docs/
+!docs/
 data/clean_job_postings.parquet/
-docs/
+!docs/
 .quarto/
 ..bfg-report/
