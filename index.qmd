@@ -1,0 +1,28 @@
+---
+title: "Geographic & Remote Work Analysis"
+subtitle: "Group 09 Job Market Analysis 2024"
+format:
+  html:
+    toc: false
+---
+
+## Overview
+This project analyzes job market trends in 2024, focusing on geographic and remote work analysis.
+
+## Key Findings
+- Emerging tech hubs are now leading in job growth, outpacing legacy hubs
+- Remote work availability is highest in the Real Estate, Arts, and Finance sectors. Additionally, most of the remote job postings are from Alaska
+- Top in-demand skills include...
+
+## Explore the Analysis
+Research Introduction: Background and research questions 
+Geographic Trends: 
+EDA and Visualizations: Exploratory data analysis
+Tech Hub Analysis: Legacy vs emerging tech hubs
+Skill Gap Analysis: In-demand skills analysis
+Random Forest: Predictive modeling
+
+## About This Project
+Dataset: Lightcast Job Postings (Jan-Sep 2024)
+Team: Group 09
+Course: AD688 - Cloud Analytics

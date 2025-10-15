@@ -117,5 +117,40 @@
     "title": "Research Introduction: AI vs. Non-AI Careers",
     "section": "References",
     "text": "References\n\n\nBessen, J. (2018): AI and Jobs: The Role of Demand, Working Paper, National Bureau of Economic Research.\n\n\nChen, Z., G. Levanon, and M. Sigelman. (2024): America’s Tech Hubs Are Multiplying: How Tech Powerhouses’ Diaspora Are Fueling the Rise of New Cities on the Talent Frontier,The Burning Glass Institute.\n\n\nPaul, J. A. (2022): “Work from home behaviors among u.s. Urban and rural residents,” Transportation Research Part A: Policy and Practice, 165, 254–69.\n\n\nPaulino, M., S. J. London, L. M. Giurge, R. W. Buell, and A. S. Gabriel. (2025): “Return-to-office mandates and workplace inequality: Implications for industrial-organizational psychology,” Industrial and Organizational Psychology,."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Geographic & Remote Work Analysis",
+    "section": "",
+    "text": "This project analyzes job market trends in 2024, focusing on geographic and remote work analysis."
+  },
+  {
+    "objectID": "index.html#overview",
+    "href": "index.html#overview",
+    "title": "Geographic & Remote Work Analysis",
+    "section": "",
+    "text": "This project analyzes job market trends in 2024, focusing on geographic and remote work analysis."
+  },
+  {
+    "objectID": "index.html#key-findings",
+    "href": "index.html#key-findings",
+    "title": "Geographic & Remote Work Analysis",
+    "section": "Key Findings",
+    "text": "Key Findings\n\nEmerging tech hubs are now leading in job growth, outpacing legacy hubs\nRemote work availability is highest in the Real Estate, Arts, and Finance sectors. Additionally, most of the remote job postings are from Alaska\nTop in-demand skills include…"
+  },
+  {
+    "objectID": "index.html#explore-the-analysis",
+    "href": "index.html#explore-the-analysis",
+    "title": "Geographic & Remote Work Analysis",
+    "section": "Explore the Analysis",
+    "text": "Explore the Analysis\nResearch Introduction: Background and research questions Geographic Trends: EDA and Visualizations: Exploratory data analysis Tech Hub Analysis: Legacy vs emerging tech hubs Skill Gap Analysis: In-demand skills analysis Random Forest: Predictive modeling"
+  },
+  {
+    "objectID": "index.html#about-this-project",
+    "href": "index.html#about-this-project",
+    "title": "Geographic & Remote Work Analysis",
+    "section": "About This Project",
+    "text": "About This Project\nDataset: Lightcast Job Postings (Jan-Sep 2024) Team: Group 09 Course: AD688 - Cloud Analytics"
   }
 ]
