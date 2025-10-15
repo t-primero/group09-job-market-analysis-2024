@@ -74,7 +74,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-c8ad9e5dbd60b7b70b38521ab19b7da4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-c1fac2584b48ed01fb6e278e36375074.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-93b10530f83a0ed64c0288fd832e80ab.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -129,7 +129,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./introduction.html"> 
-<span class="menu-text">Introduction</span></a>
+<span class="menu-text">Research Introduction</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./geographic_trends.html" aria-current="page"> 
+<span class="menu-text">Geographic Trends</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./eda.html"> 
+<span class="menu-text">EDA and Visualizations</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./tech_hub_analysis.html"> 
+<span class="menu-text">Tech Hub Analysis</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./skill_gap_analysis.html"> 
@@ -138,10 +150,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li class="nav-item">
     <a class="nav-link" href="./RandomForest.html"> 
 <span class="menu-text">Random Forest</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
-<span class="menu-text">About</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -179,7 +187,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div id="dcd7b817" class="cell" data-execution_count="1">
+<div id="f8bc994f" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> SparkSession, functions <span class="im">as</span> F</span>
@@ -192,7 +200,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Overview Geographic EDA using Lightcast cleaned Spark DataFrame df. Focus on states, remote share, salaries, and hubs.</p>
 <p>Top 10 States by Job postings</p>
-<div id="91a408de" class="cell" data-execution_count="2">
+<div id="99230304" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>state_counts <span class="op">=</span> (df.groupBy(<span class="st">"STATE_NAME"</span>)</span>
@@ -212,13 +220,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="geographic_trends_files/figure-html/cell-3-output-1.png" width="752" height="367" class="figure-img"></p>
+<p><img src="geographic_trends_files/figure-html/cell-3-output-1.png" width="753" height="368" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Remote vs Onsite Share by Industry</p>
-<div id="b93bd803" class="cell" data-execution_count="3">
+<div id="67498f2d" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>remote_ind <span class="op">=</span> (df.groupBy(<span class="st">"NAICS2_NAME"</span>,<span class="st">"REMOTE_TYPE"</span>)</span>
@@ -246,13 +254,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="geographic_trends_files/figure-html/cell-4-output-1.png" width="794" height="464" class="figure-img"></p>
+<p><img src="geographic_trends_files/figure-html/cell-4-output-1.png" width="844" height="464" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Average Salary by State</p>
-<div id="09141037" class="cell" data-execution_count="4">
+<div id="27840bbb" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>state_salary <span class="op">=</span> (df.select(<span class="st">"STATE_NAME"</span>,<span class="st">"SALARY"</span>)</span>
@@ -282,7 +290,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Tech Hubs vs Emerging Locations</p>
-<div id="a73b0735" class="cell" data-execution_count="5">
+<div id="b5b0abc5" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>hub <span class="op">=</span> (df.withColumn(<span class="st">"hub_label"</span>,</span>
@@ -303,13 +311,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="geographic_trends_files/figure-html/cell-6-output-1.png" width="464" height="368" class="figure-img"></p>
+<p><img src="geographic_trends_files/figure-html/cell-6-output-1.png" width="465" height="368" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Top states by postings</p>
-<div id="1f1a77f7" class="cell" data-execution_count="6">
+<div id="7c370364" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>top_states <span class="op">=</span> df.groupBy(<span class="st">"STATE_NAME"</span>).count().orderBy(<span class="st">"count"</span>, ascending<span class="op">=</span><span class="va">False</span>).limit(<span class="dv">15</span>).toPandas()</span>
@@ -322,13 +330,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="geographic_trends_files/figure-html/cell-7-output-1.png" width="753" height="560" class="figure-img"></p>
+<p><img src="geographic_trends_files/figure-html/cell-7-output-1.png" width="751" height="560" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Top states by remote share</p>
-<div id="42597993" class="cell" data-execution_count="7">
+<div id="63d56fbf" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>state_remote_pdf <span class="op">=</span> df.groupBy(<span class="st">"STATE_NAME"</span>,<span class="st">"REMOTE_TYPE"</span>).count().toPandas()</span>

@@ -129,7 +129,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./introduction.html"> 
-<span class="menu-text">Introduction</span></a>
+<span class="menu-text">Research Introduction</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./geographic_trends.html"> 
+<span class="menu-text">Geographic Trends</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link active" href="./eda.html" aria-current="page"> 
@@ -146,10 +150,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li class="nav-item">
     <a class="nav-link" href="./RandomForest.html"> 
 <span class="menu-text">Random Forest</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
-<span class="menu-text">About</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -197,7 +197,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div id="5682d25d" class="cell" data-execution_count="1">
+<div id="01cb7576" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> SparkSession</span>
@@ -212,7 +212,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>72498</code></pre>
 </div>
 </div>
-<div id="ddaaa1e1" class="cell" data-execution_count="2">
+<div id="f09b0ad6" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.functions <span class="im">import</span> when, col, trim</span>
@@ -265,13 +265,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>72498</code></pre>
 </div>
 </div>
-<div id="41181f1b" class="cell" data-execution_count="3">
+<div id="00acabb2" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df.write.mode(<span class="st">"overwrite"</span>).parquet(<span class="st">"data/clean_job_postings.parquet"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="038d103c" class="cell" data-execution_count="4">
+<div id="65ac92c9" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remote share by state</span></span>
@@ -366,7 +366,7 @@ only showing top 20 rows</code></pre>
 only showing top 20 rows</code></pre>
 </div>
 </div>
-<div id="380c3f16" class="cell" data-execution_count="5">
+<div id="96547303" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.functions <span class="im">import</span> col, count, <span class="bu">sum</span> <span class="im">as</span> _sum, when, to_date, year, month, desc</span>
@@ -399,7 +399,7 @@ only showing top 20 rows</code></pre>
 <span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> df.withColumn(<span class="st">"IS_AI_ROLE"</span>, when(col(<span class="st">"TITLE"</span>).isNotNull(), <span class="dv">0</span>).otherwise(<span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="4ddb2848" class="cell" data-execution_count="6">
+<div id="17ce5412" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.functions <span class="im">import</span> desc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
