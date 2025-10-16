@@ -38,6 +38,11 @@ df.createOrReplaceTempView("job_postings")
 #| message: false
 #| warning: false
 
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 # Cleaning REMOTE_TYPE_NAME column
 # Missing values are replaced
 
@@ -197,23 +202,15 @@ rf_metrics = pd.DataFrame({
 rf_metrics
 ```
 
-*Interpretation*
-
-These variables collectively explains the salary by about 20%.
+*Interpretation*: These variables collectively explains the salary by about 20%.
 Whereas in the testing data, the tested salaries were off by ~39K compared to the actual.
 
-There are potentially other features in the dataset that can be used to better determine the salary.
-
 **Feature Importance**
+
 Feature importance determines which variables used in the model had the most influence/impact on determining the salary.
 The graph below shows the top 20 variables used.
 
 ```{python}
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-
 rf_stage = model.stages[-1]
 importances = np.array(rf_stage.featureImportances.toArray())
 
@@ -226,15 +223,24 @@ feat_imp = (pd.DataFrame({"Feature": feature_names, "Importance": importances})
               .sort_values("Importance", ascending=False)
               .head(topn))
 
-plt.figure(figsize=(10, 6))
-sns.barplot(data=feat_imp, x="Importance", y="Feature")
+def clean_label(s: str) -> str:
+    s = re.sub(r'(_ohe|_idx)$', '', s)
+    s = s.replace("MIN_EDULEVELS","Education") \
+         .replace("NAICS2_NAME","Industry") \
+         .replace("STATE_NAME","State") \
+         .replace("REMOTE_TYPE","Remote")
+    return textwrap.shorten(s, width=28, placeholder="…")  # wrap/shorten
+feat_imp["Label"] = feat_imp["Feature"].map(clean_label)
+
+plt.figure(figsize=(7,6))
+sns.barplot(data=feat_imp, x="Importance", y="Label")
 plt.title(f"Top {topn} Random Forest Feature Importances")
 plt.xlabel("Importance"); plt.ylabel("Feature")
 plt.tight_layout()
 plt.show()
 ```
-Despite a relatively lower R squared value below 20% - this chart clearly shows that state (and ultimately location) 
-has less influence on the amount of salary an employee receives compared to their education, position, and field. 
+*Interpretation*: Despite a relatively lower R squared value below 20% - this chart clearly shows 
+that state (and ultimately location) has less influence on the amount of salary an employee receives compared to their education, position, and field. 
 
 
 **Predictive Analysis**
@@ -289,16 +295,38 @@ new_df = new_df.fillna({c: "Unknown" for c in cat_cols})
 # Predicting the salaries using trained pipeline model
 pred = model.transform(new_df)
 
-pred.select(*cat_cols, *num_cols, F.col("prediction").alias("predicted_salary")).show(truncate=False)
+pred_pdf = (
+    pred.select(
+        F.col("REMOTE_TYPE").alias("Remote/Onsite"),
+        F.col("STATE_NAME").alias("State"),
+        F.col("MIN_EDULEVELS").alias("Education"),
+        F.col("NAICS2_NAME").alias("Industry"),
+        F.col("MIN_YEARS_EXPERIENCE").alias("Min Yrs Exp"),
+        F.col("prediction").alias("Predicted Salary"),
+    )
+    .orderBy(F.col("Predicted Salary").desc())
+    .toPandas()
+)
+
+# Round and format currency
+pred_pdf["Predicted Salary"] = pred_pdf["Predicted Salary"].round(0)
+
+# Add a rank column
+pred_pdf.insert(0, "#", range(1, len(pred_pdf) + 1))
+
+# Render a clean, index-free, currency-formatted table
+pred_pdf.style.format({
+    "Predicted Salary": "${:,.0f}",
+    "Min Yrs Exp": "{:.0f}"
+}).hide(axis="index")
 ```
 
-The results are varied - in some instances the results align with our previous analysis - higher eduction, onsite, and tech should see higher salaries. For example, the first line and eigth line do have the highest salaries being in information and tech alongside 5+ years of experience, onsite, and higher education completed. However, the fith line has the lowest salary, but does not necessarily align in an intuitive sense - 10 years of experience, Masters, onsite, etc. should be ranked higher.
+*Interpretation*: The results are varied - in some instances the results align with our previous analysis - higher eduction, onsite, and tech should see higher salaries. For example, the first line and eigth line do have the highest salaries being in information and tech alongside 5+ years of experience, onsite, and higher education completed. However, the fith line has the lowest salary, but does not necessarily align in an intuitive sense - 10 years of experience, Masters, onsite, etc. should be ranked higher.
 
-While the predictive power does show, fine tuning and additional model improvements can be made to improve the predictive capabilities.
+**KMeans Clustering Analysis**
 
-**Clustering Analysis**
-
-This clustering analysis explores salary and years of experience by the NAICS Name.
+This analysis explores salary and years of experience by the NAICS Name.
+As shown below, three groups have been for various NAICS's, with years of experience horizontally, and salary on the vertical axis.
 
 ```{python}
 
@@ -388,6 +416,6 @@ plt.legend(handles, [f"Cluster {i}" for i in sorted(plot_pdf['cluster'].unique()
 plt.grid(True, alpha=.3); plt.tight_layout(); plt.show()
 ```
 
-The KMeans cluster mostly uses salaries to seperate each cluster group - while some clusters pay lower or higher pay at the same years of experience, this suggests that the industry does influence salaries at different levels of experience. Overall, 
+*Interpretation*: The KMeans cluster mostly uses salaries to separate each cluster group - while some clusters pay lower or higher pay at the same years of experience, this suggests that the industry does influence salaries at different levels of experience. Overall, 
 salaries generally rise with experience, though industry effects can override that pattern.
 
