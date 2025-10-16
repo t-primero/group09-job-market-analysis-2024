@@ -199,9 +199,9 @@ pred = model.transform(test_df)
 # RMSE, MAE, R squared
 ev = RegressionEvaluator(labelCol="SALARY", predictionCol="prediction")
 
-rmse = ev.setMetricName("rmse").evaluate(pred)
-mae  = ev.setMetricName("mae").evaluate(pred)
-r2   = ev.setMetricName("r2").evaluate(pred)
+- rmse = ev.setMetricName("rmse").evaluate(pred)
+- mae  = ev.setMetricName("mae").evaluate(pred)
+- r2   = ev.setMetricName("r2").evaluate(pred)
 
 rf_metrics = pd.DataFrame({
     "RMSE": [rmse],
@@ -242,7 +242,7 @@ def clean_label(s: str) -> str:
     return textwrap.shorten(s, width=28, placeholder="…")  # wrap/shorten
 feat_imp["Label"] = feat_imp["Feature"].map(clean_label)
 
-plt.figure(figsize=(9,6))
+plt.figure(figsize=(8,6))
 sns.barplot(data=feat_imp, x="Importance", y="Label")
 plt.title(f"Top {topn} Random Forest Feature Importances")
 plt.xlabel("Importance"); plt.ylabel("Feature")
