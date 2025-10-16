@@ -141,9 +141,9 @@ Before using the model for predictive analysis, we will measure how strong the m
 
 The table below shows the following metrics:
 
-RMSE (Root Mean Squared Error): Average error between predicted and actual salaries.
-MAE (Mean Absolute Error): Average error without considering direction (absolute value of the errors).
-R-Squared: Coefficient of determination that shows how well the predicted salaries approximates actual salaries.
+- RMSE (Root Mean Squared Error): Average error between predicted and actual salaries.
+- MAE (Mean Absolute Error): Average error without considering direction (absolute value of the errors).
+- R-Squared: Coefficient of determination that shows how well the predicted salaries approximates actual salaries.
 
 ```{python}
 #| label: model-deployment
@@ -199,9 +199,9 @@ pred = model.transform(test_df)
 # RMSE, MAE, R squared
 ev = RegressionEvaluator(labelCol="SALARY", predictionCol="prediction")
 
-- rmse = ev.setMetricName("rmse").evaluate(pred)
-- mae  = ev.setMetricName("mae").evaluate(pred)
-- r2   = ev.setMetricName("r2").evaluate(pred)
+rmse = ev.setMetricName("rmse").evaluate(pred)
+mae  = ev.setMetricName("mae").evaluate(pred)
+r2   = ev.setMetricName("r2").evaluate(pred)
 
 rf_metrics = pd.DataFrame({
     "RMSE": [rmse],
