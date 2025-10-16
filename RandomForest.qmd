@@ -137,6 +137,14 @@ The following variables will be used in the Random Forest model:
 
 **Random Forest Model Deployment & Interpretation**
 
+Before using the model for predictive analysis, we will measure how strong the model is.
+
+The table below shows the following metrics:
+
+RMSE (Root Mean Squared Error): Average error between predicted and actual salaries.
+MAE (Mean Absolute Error): Average error without considering direction (absolute value of the errors).
+R-Squared: Coefficient of determination that shows how well the predicted salaries approximates actual salaries.
+
 ```{python}
 #| label: model-deployment
 #| include: false
@@ -204,7 +212,7 @@ rf_metrics = pd.DataFrame({
 rf_metrics
 ```
 
-*Interpretation*: These variables collectively explains the salary by about 20%.
+Interpretation: These variables collectively explains the salary by about 20%.
 Whereas in the testing data, the tested salaries were off by ~39K compared to the actual.
 
 **Feature Importance**
@@ -213,35 +221,27 @@ Feature importance determines which variables used in the model had the most inf
 The graph below shows the top 20 variables used.
 
 ```{python}
-rf_stage = model.stages[-1]
-importances = np.array(rf_stage.featureImportances.toArray())
+rf_stage = model.stages[-1] 
+importances = np.array(rf_stage.featureImportances.toArray()) 
 
-meta = pred.schema["features"].metadata["ml_attr"]["attrs"]
-attrs = sorted([*meta.get("binary", []), *meta.get("numeric", [])], key=lambda a: a["idx"])
-feature_names = [a["name"] for a in attrs]
+meta = pred.schema["features"].metadata["ml_attr"]["attrs"] 
+attrs = sorted([*meta.get("binary", []), *meta.get("numeric", [])], 
+key=lambda a: a["idx"]) 
+feature_names = [a["name"] for a in attrs] 
 
-topn = 20
-feat_imp = (pd.DataFrame({"Feature": feature_names, "Importance": importances})
-              .sort_values("Importance", ascending=False)
-              .head(topn))
+topn = 20 
+feat_imp = (pd.DataFrame({"Feature": feature_names, "Importance": importances}) 
+    .sort_values("Importance", ascending=False) 
+    .head(topn)) 
 
-def clean_label(s: str) -> str:
-    s = re.sub(r'(_ohe|_idx)$', '', s)
-    s = s.replace("MIN_EDULEVELS","Education") \
-         .replace("NAICS2_NAME","Industry") \
-         .replace("STATE_NAME","State") \
-         .replace("REMOTE_TYPE","Remote")
-    return textwrap.shorten(s, width=28, placeholder="…")  # wrap/shorten
-feat_imp["Label"] = feat_imp["Feature"].map(clean_label)
-
-plt.figure(figsize=(7,6))
-sns.barplot(data=feat_imp, x="Importance", y="Label")
-plt.title(f"Top {topn} Random Forest Feature Importances")
-plt.xlabel("Importance"); plt.ylabel("Feature")
-plt.tight_layout()
+plt.figure(figsize=(8, 6)) 
+sns.barplot(data=feat_imp, x="Importance", y="Feature") 
+plt.title(f"Top {topn} Random Forest Feature Importances") 
+plt.xlabel("Importance"); plt.ylabel("Feature") 
+plt.tight_layout() 
 plt.show()
 ```
-*Interpretation*: Despite a relatively lower R squared value below 20% - this chart clearly shows 
+Interpretation: Despite a relatively lower R squared value below 20% - this chart clearly shows 
 that state (and ultimately location) has less influence on the amount of salary an employee receives compared to their education, position, and field. 
 
 
@@ -323,7 +323,7 @@ pred_pdf.style.format({
 }).hide(axis="index")
 ```
 
-*Interpretation*: The results are varied - in some instances the results align with our previous analysis - higher eduction, onsite, and tech should see higher salaries. For example, the first line and eigth line do have the highest salaries being in information and tech alongside 5+ years of experience, onsite, and higher education completed. However, the fith line has the lowest salary, but does not necessarily align in an intuitive sense - 10 years of experience, Masters, onsite, etc. should be ranked higher.
+Interpretation: The results are varied - in some instances the results align with our previous analysis - higher eduction, onsite, and tech should see higher salaries. For example, the first line and eigth line do have the highest salaries being in information and tech alongside 5+ years of experience, onsite, and higher education completed. However, the fith line has the lowest salary, but does not necessarily align in an intuitive sense - 10 years of experience, Masters, onsite, etc. should be ranked higher.
 
 **KMeans Clustering Analysis**
 
@@ -418,6 +418,6 @@ plt.legend(handles, [f"Cluster {i}" for i in sorted(plot_pdf['cluster'].unique()
 plt.grid(True, alpha=.3); plt.tight_layout(); plt.show()
 ```
 
-*Interpretation*: The KMeans cluster mostly uses salaries to separate each cluster group - while some clusters pay lower or higher pay at the same years of experience, this suggests that the industry does influence salaries at different levels of experience. Overall, 
+Interpretation: The KMeans cluster mostly uses salaries to separate each cluster group - while some clusters pay lower or higher pay at the same years of experience, this suggests that the industry does influence salaries at different levels of experience. Overall, 
 salaries generally rise with experience, though industry effects can override that pattern.
 
