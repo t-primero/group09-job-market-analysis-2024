@@ -135,7 +135,7 @@ The following variables will be used in the Random Forest model:
 - 3) Minimum Education levels
 - 4) NAICS Name
 
-**Random Forest Model Deployment & Interpretation**
+## Random Forest Model Deployment & Interpretation
 
 Before using the model for predictive analysis, we will measure how strong the model is.
 
@@ -255,7 +255,7 @@ that state (and ultimately location) has less influence on the amount of salary 
 
 
 
-**Predictive Analysis**
+## Predictive Analysis
 
 This analysis uses synthetic data to estimate what the Random Forest model would predict the salaries would be.
 There are 10 different variations of job type, state, education, etc. to predict each salary.
@@ -335,7 +335,7 @@ pred_pdf.style.format({
 
 Interpretation: The results are varied - in some instances the results align with our previous analysis - higher eduction, onsite, and tech should see higher salaries. For example, the first line and eigth line do have the highest salaries being in information and tech alongside 5+ years of experience, onsite, and higher education completed. However, the fith line has the lowest salary, but does not necessarily align in an intuitive sense - 10 years of experience, Masters, onsite, etc. should be ranked higher.
 
-**KMeans Clustering Analysis**
+## KMeans Clustering Analysis
 
 This analysis explores salary and years of experience by the NAICS Name.
 As shown below, three groups have been for various NAICS's, with years of experience horizontally, and salary on the vertical axis.
