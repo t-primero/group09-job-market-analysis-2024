@@ -1,10 +1,23 @@
 ---
+title: "Random Forest"
+format: html
+execute:
+  echo: true
+  warning: false
 jupyter: python3
 ---
 
-Regression Analysis
+**Random Forest Analysis**
+
+The purpose of this analysis is to determine how much does salary depends on geography versus other variables
+such as years of experience, job field, remote/onsite work, and level of education.
 
 ```{python}
+#| label: prep
+#| include: false
+#| message: false
+#| warning: false
+
 from pyspark.sql import SparkSession
 
 # Start a Spark session
@@ -19,9 +32,12 @@ df.createOrReplaceTempView("job_postings")
 #df.show(5)
 ```
 
-Data Preparation & Cleaning
-
 ```{python}
+#| label: data-prep
+#| include: false
+#| message: false
+#| warning: false
+
 # Cleaning REMOTE_TYPE_NAME column
 # Missing values are replaced
 
@@ -60,6 +76,12 @@ df = df.withColumn(
 ```
 
 ```{python}
+
+#| label: conversions
+#| include: false
+#| message: false
+#| warning: false
+
 # Ensure numeric columns are of float type
 
 df = df.withColumn("SALARY", col("SALARY").cast("float")) \
@@ -70,6 +92,11 @@ df = df.withColumn("SALARY", col("SALARY").cast("float")) \
 ```
 
 ```{python}
+#| label: remove-nulls
+#| include: false
+#| message: false
+#| warning: false
+
 # Removing any remaining NA values and selecting relevant columns for random forest analysis
 
 from pyspark.sql.functions import col, pow
@@ -94,13 +121,23 @@ rf_df = df.dropna(subset=[
 )
 ```
 
-**Why select these variables?**
+**Variables Used**
 
-The goal of using these variables is to be able to identify how much wieght/impact locations (such as state) has on the salary, in comparison to other variables such as years of experience.
+The following variables will be used in the Random Forest model:
 
-**Random Forest Model Deployment**
+- 1) Remote Type (On-Site/Remote)
+- 2) State Name
+- 3) Minimum Education levels
+- 4) NAICS Name
+
+**Random Forest Model Deployment & Interpretation**
 
 ```{python}
+#| label: model-deployment
+#| include: false
+#| message: false
+#| warning: false
+
 from pyspark.ml import Pipeline
 from pyspark.ml.feature import StringIndexer, OneHotEncoder, VectorAssembler
 from pyspark.ml.regression import RandomForestRegressor
@@ -145,17 +182,31 @@ model = pipeline.fit(train_df)
 pred = model.transform(test_df)
 
 # RMSE, MAE, R squared
-for metric in ["rmse", "mae", "r2"]:
-    ev = RegressionEvaluator(labelCol="SALARY", predictionCol="prediction", metricName=metric)
-    print(metric.upper(), "=", ev.evaluate(pred))
+ev = RegressionEvaluator(labelCol="SALARY", predictionCol="prediction")
+
+rmse = ev.setMetricName("rmse").evaluate(pred)
+mae  = ev.setMetricName("mae").evaluate(pred)
+r2   = ev.setMetricName("r2").evaluate(pred)
+
+rf_metrics = pd.DataFrame({
+    "RMSE": [rmse],
+    "MAE": [mae],
+    "R²": [r2]
+}).round({"RMSE": 0, "MAE": 0, "R²": 3})
+
+rf_metrics
 ```
 
 *Interpretation*
 
-These variables collectively explain the salary by about 20%.
-Whereas in the testing data, the tested salaries were off by ~39K compared to the actuals.
+These variables collectively explains the salary by about 20%.
+Whereas in the testing data, the tested salaries were off by ~39K compared to the actual.
+
+There are potentially other features in the dataset that can be used to better determine the salary.
 
 **Feature Importance**
+Feature importance determines which variables used in the model had the most influence/impact on determining the salary.
+The graph below shows the top 20 variables used.
 
 ```{python}
 import numpy as np
@@ -182,12 +233,13 @@ plt.xlabel("Importance"); plt.ylabel("Feature")
 plt.tight_layout()
 plt.show()
 ```
+Despite a relatively lower R squared value below 20% - this chart clearly shows that state (and ultimately location) 
+has less influence on the amount of salary an employee receives compared to their education, position, and field. 
 
-Despite a relatively lower R squared value below 20% - this chart clearly shows that state (and ultimately location) has less influence on the amount of salary an employee receives compared to their education, position, and field. These three factors can be summarized as the amount of skill an employee has, and how much demand is required for said skill.
 
-**Predictive Analysis (Extra Credit)**
+**Predictive Analysis**
 
-This analysis uses test/fake data to estimate what the Random Forest model would predict the salaries to be.
+This analysis uses synthetic data to estimate what the Random Forest model would predict the salaries would be.
 There are 10 different variations of job type, state, education, etc. to predict each salary.
 
 ```{python}
@@ -246,9 +298,15 @@ While the predictive power does show, fine tuning and additional model improveme
 
 **Clustering Analysis**
 
-This clustering analysis explores salary and years of experience by the NAICS Name
+This clustering analysis explores salary and years of experience by the NAICS Name.
 
 ```{python}
+
+#| label: clustering
+#| include: false
+#| message: false
+#| warning: false
+
 # KMEANS by NAICS NAME
 from pyspark.sql import functions as F
 from pyspark.ml import Pipeline
@@ -314,7 +372,9 @@ pred.groupBy("cluster").agg(
     F.avg("SALARY").alias("avg_salary"),
     F.avg("MIN_YEARS_EXPERIENCE").alias("avg_min_years_exp")
 ).orderBy("cluster").show()
+```
 
+```{python}
 # Visualizing the results
 plot_pdf = pred.select("MIN_YEARS_EXPERIENCE", "SALARY", "cluster") \
                .sample(False, 0.25, 42).toPandas()
@@ -328,39 +388,6 @@ plt.legend(handles, [f"Cluster {i}" for i in sorted(plot_pdf['cluster'].unique()
 plt.grid(True, alpha=.3); plt.tight_layout(); plt.show()
 ```
 
-The KMeans cluster mostly uses salaries to seperate each cluster group - while some clusters pay lower or higher pay at the same years of experience, this suggests that the industry does influence salaries at different levels of experience. Overall, salaries generally rise with experience, though industry effects can override that pattern.
-
-**Additional Analytics**
-
-This section is to provide a quick salary state comparison
-
-```{python}
-from pyspark.sql import functions as F
-
-# Average salary by state
-state_salary = (
-    rf_df
-      .select("STATE_NAME", "SALARY")
-      .withColumn("SALARY", F.col("SALARY").cast("double"))
-      .na.drop(subset=["STATE_NAME", "SALARY"])
-      .groupBy("STATE_NAME")
-      .agg(
-          F.count("*").alias("n_postings"),
-          F.avg("SALARY").alias("avg_salary"),
-          F.expr("percentile_approx(SALARY, 0.5)").alias("median_salary")
-      )
-      .orderBy(F.col("avg_salary").desc())
-)
-state_salary.show(60, truncate=False)
-
-# Pandas table
-tbl = (
-    state_salary
-      .withColumn("avg_salary", F.round("avg_salary", 0))
-      .withColumn("median_salary", F.round("median_salary", 0))
-      .orderBy(F.col("avg_salary").desc())
-      .toPandas()
-)
-print(tbl)
-```
+The KMeans cluster mostly uses salaries to seperate each cluster group - while some clusters pay lower or higher pay at the same years of experience, this suggests that the industry does influence salaries at different levels of experience. Overall, 
+salaries generally rise with experience, though industry effects can override that pattern.
 
