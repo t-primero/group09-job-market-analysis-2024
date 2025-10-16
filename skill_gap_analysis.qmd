@@ -40,6 +40,11 @@ Use a numerical scale (1-5) to indicate proficiency levels:
 
 ```{python}
 import pandas as pd
+import json
+import numpy as np
+from collections import Counter
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 skills_data = {
     "Name": ["Thomas", "Fayobomi", "Dominique", "Aryan"],
@@ -52,13 +57,13 @@ skills_data = {
 df_skills = pd.DataFrame(skills_data)
 df_skills.set_index("Name", inplace=True)
 df_skills
-
 ```
 
 You can use heatmaps or any other visualizations to visualize team strengths and gaps.
 
 ### 
 Visualizing Skill Gaps with Seaborn
+
 ```{python}
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -69,17 +74,17 @@ plt.title("Team Skill Levels Heatmap")
 plt.show()
 ```
 
-
 ### Compare team skills to industry requirements
 Extract most in-demand skills from IT job postings.
 Identify gaps between team skill levels and job expectations.
 
 ## Extracting Top Skills from Job Descriptions
+
 ```{python}
 from collections import Counter
 
 #Assuming job_descriptions is a list of text from job postings
-top_skills = ["Python", "SQL", "Machine Learning", "Cloud Computing", "Docker", "AWS"]
+top_skills = ["Python", "SQL", "Machine Learning", "Cloud Computing"]
 job_skill_counts = Counter(top_skills)
 
 # Compare with team skill levels
@@ -88,10 +93,463 @@ for skill in top_skills:
         df_skills[skill] = 0  # Assume no knowledge in missing skills
 
 df_skills
-
 ```
 
 ## Improvement Plan
 Which skills should each member prioritize learning?
 What courses or resources can help?
 How can the team collaborate to bridge skill gaps?
+
+```{python}
+from pyspark.sql import SparkSession, functions as F
+import seaborn as sns, matplotlib.pyplot as plt
+sns.set(style="whitegrid")
+
+spark = SparkSession.builder.appName("EDA").getOrCreate()
+df = spark.read.parquet("data/clean_job_postings.parquet")
+```
+
+```{python}
+print(df.columns)
+print(df.head(5))
+```
+
+```{python}
+# Select comprehensive columns for skill gap analysis
+skill_gap_data = df[[
+    # Job identifiers
+    'TITLE_NAME',
+    
+    # Skills columns
+    'SKILLS_NAME',
+    'SPECIALIZED_SKILLS_NAME',
+    'SOFTWARE_SKILLS_NAME',
+    'COMMON_SKILLS_NAME',
+    
+    # Education requirements
+    'EDUCATION_LEVELS_NAME',
+    'MIN_EDULEVELS',
+    'MIN_EDULEVELS_NAME',
+    
+    # Experience & Employment
+    'EMPLOYMENT_TYPE',
+    'EMPLOYMENT_TYPE_NAME',
+    'MIN_YEARS_EXPERIENCE',
+    'MAX_YEARS_EXPERIENCE',
+    'IS_INTERNSHIP',
+    
+    # Compensation
+    'SALARY',
+    'SALARY_FROM',
+    'SALARY_TO',
+    'ORIGINAL_PAY_PERIOD',
+    
+    # Remote & Location
+    'REMOTE_TYPE',
+    'REMOTE_TYPE_NAME',
+    'LOCATION',
+    'CITY',
+    'CITY_NAME',
+    'COUNTY',
+    'COUNTY_NAME',
+    'MSA',
+    'MSA_NAME',
+    'STATE',
+    'STATE_NAME',
+    
+    # Geographic mobility (outgoing/incoming)
+    'COUNTY_OUTGOING',
+    'COUNTY_NAME_OUTGOING',
+    'COUNTY_INCOMING',
+    'COUNTY_NAME_INCOMING',
+    'MSA_OUTGOING',
+    'MSA_NAME_OUTGOING',
+    'MSA_INCOMING',
+    'MSA_NAME_INCOMING',
+    
+    # Company & Industry
+    'COMPANY_NAME',
+    'NAICS2',
+    'NAICS2_NAME',
+    'NAICS3',
+    'NAICS3_NAME',
+    'NAICS4',
+    'NAICS4_NAME',
+    'NAICS5',
+    'NAICS5_NAME',
+    'NAICS6',
+    'NAICS6_NAME',
+    
+    # Occupation classification
+    'ONET',
+    'ONET_NAME',
+    'ONET_2019_NAME',
+    'SOC_2021_5_NAME'
+]]
+
+# Display dataset info
+
+
+# Preview the data
+print(skill_gap_data.head(3))
+```
+
+```{python}
+skill_gap_data = skill_gap_data.toPandas()
+print(skill_gap_data.shape)
+skill_gap_data.head()
+```
+
+```{python}
+# Parse the skills column (convert string to list)
+skill_gap_data['SKILLS_LIST'] = skill_gap_data['SKILLS_NAME'].apply(
+    lambda x: json.loads(x) if pd.notna(x) else []
+)
+
+# Get all skills from all jobs
+all_skills = []
+for skills in skill_gap_data['SKILLS_LIST']:
+    all_skills.extend(skills)
+
+# Count how often each skill appears
+skill_counts = Counter(all_skills)
+
+# Get top 20 skills
+top_50_skills = pd.DataFrame(
+    skill_counts.most_common(50), 
+    columns=['Skill', 'Number_of_Jobs']
+)
+
+print("\n=== TOP 50 MOST DEMANDED SKILLS ===")
+print(top_50_skills)
+```
+
+```{python}
+# Parse the skills column (convert string to list)
+skill_gap_data['SOFTWARE_SKILLS_LIST'] = skill_gap_data['SOFTWARE_SKILLS_NAME'].apply(
+    lambda x: json.loads(x) if pd.notna(x) else []
+)
+
+# Get all skills from all jobs
+all_skills = []
+for skills in skill_gap_data['SOFTWARE_SKILLS_LIST']:
+    all_skills.extend(skills)
+
+# Count how often each skill appears
+skill_counts = Counter(all_skills)
+
+# Get top 20 skills
+top_50_skills = pd.DataFrame(
+    skill_counts.most_common(50), 
+    columns=['Skill', 'Number_of_Jobs']
+)
+
+print("\n=== TOP 50 MOST DEMANDED SOFTWARE SKILLS ===")
+print(top_50_skills)
+```
+
+```{python}
+# ONLY use the skills from your df_team
+team_skills = df_skills.columns.tolist()  # ['Python', 'SQL', 'Machine Learning', 'Cloud Computing']
+
+print(f"\nYour team's skills: {team_skills}")
+
+# Map job posting variations to your skills
+skill_variations = {
+    'Python': ['Python', 'Python (Programming Language)', 'Python Scripting'],
+    'SQL': ['SQL', 'SQL (Programming Language)', 'MySQL', 'PostgreSQL', 'SQL Server'],
+    'Machine Learning': ['Machine Learning', 'Deep Learning', 'ML', 'Predictive Modeling', 
+                         'Data Mining', 'Neural Networks'],
+    'Cloud Computing': ['Cloud Computing', 'AWS', 'Azure', 'GCP', 'Google Cloud Platform (GCP)',
+                        'Amazon Web Services', 'Microsoft Azure', 'Cloud Services']
+}
+
+# Check if team has each top skill
+def team_has_skill(job_skill):
+    """Check if any of your 4 skills matches the job skill"""
+    for team_skill in team_skills:
+        variations = skill_variations.get(team_skill, [team_skill])
+        for variation in variations:
+            if variation.lower() in job_skill.lower() or job_skill.lower() in variation.lower():
+                return f'✓ YES ({team_skill})'
+    return '✗ NO'
+
+top_50_skills['Team_Has_It'] = top_50_skills['Skill'].apply(team_has_skill)
+
+print("\n=== DO YOU HAVE THESE TOP 50 SOFTWARE SKILLS? ===")
+print(top_50_skills)
+```
+
+```{python}
+# Top 15 for maximum readability
+top_15_skills = top_50_skills.head(15)
+
+colors = ['#4CAF50' if '✓ YES' in has_it else '#FF5252' 
+          for has_it in top_15_skills['Team_Has_It']]
+
+plt.figure(figsize=(12, 7))
+
+bars = plt.barh(range(len(top_15_skills)), 
+                top_15_skills['Number_of_Jobs'], 
+                color=colors,
+                edgecolor='black',
+                linewidth=0.7,
+                alpha=0.8)
+
+plt.yticks(range(len(top_15_skills)), top_15_skills['Skill'], fontsize=12)
+plt.xlabel('Number of Jobs', fontsize=13, fontweight='bold')
+plt.title('Top 15 Most In-Demand Software Skills', 
+          fontsize=17, fontweight='bold', pad=20)
+
+# Add value labels
+for i, (bar, value) in enumerate(zip(bars, top_15_skills['Number_of_Jobs'])):
+    plt.text(value + 300, i, f'{value:,}', 
+             va='center', fontsize=11, fontweight='bold')
+
+# Legend
+from matplotlib.patches import Patch
+legend_elements = [
+    Patch(facecolor='#4CAF50', label='✅ Team Has This'),
+    Patch(facecolor='#FF5252', label='❌ Need to Learn')
+]
+plt.legend(handles=legend_elements, loc='lower right', fontsize=12)
+
+plt.grid(axis='x', alpha=0.3, linestyle='--')
+plt.gca().invert_yaxis()
+plt.tight_layout()
+plt.savefig('top_15_software_skills.png', dpi=300, bbox_inches='tight')
+plt.show()
+
+print("\n✅ Chart saved as: top_15_software_skills.png")
+```
+
+```{python}
+# Get the top 50 software skills results (from your previous output)
+# Assuming top_50_skills is your dataframe from the previous analysis
+team_avg = df_skills.mean()
+
+# Add team's average proficiency level
+def get_team_proficiency(skill_match):
+    """Extract proficiency level if team has the skill"""
+    if '✓ YES' in skill_match:
+        # Extract skill name from "✓ YES (Skill Name)"
+        team_skill = skill_match.split('(')[1].split(')')[0]
+        if team_skill in team_avg.index:
+            return team_avg[team_skill]
+    return 0  # No proficiency if team doesn't have it
+
+top_50_skills['Team_Proficiency'] = top_50_skills['Team_Has_It'].apply(get_team_proficiency)
+
+# Add proficiency labels
+def proficiency_label(score):
+    if score == 0:
+        return "No Knowledge"
+    elif score < 2:
+        return "Beginner"
+    elif score < 3:
+        return "Basic"
+    elif score < 4:
+        return "Intermediate"
+    elif score < 5:
+        return "Advanced"
+    else:
+        return "Expert"
+
+top_50_skills['Proficiency_Level'] = top_50_skills['Team_Proficiency'].apply(proficiency_label)
+
+print("\n=== TOP 50 SKILLS WITH YOUR PROFICIENCY RATINGS ===")
+print(top_50_skills[['Skill', 'Number_of_Jobs', 'Team_Proficiency', 'Proficiency_Level']])
+```
+
+```{python}
+# Calculate how "ready" you are based on both having the skill AND proficiency
+top_50_skills['Readiness_Score'] = top_50_skills['Team_Proficiency'] / 5 * 100
+
+# Market demand importance (normalize to 100)
+max_demand = top_50_skills['Number_of_Jobs'].max()
+top_50_skills['Market_Importance'] = (top_50_skills['Number_of_Jobs'] / max_demand) * 100
+
+# Gap Score: negative = you're behind, positive = you're ahead
+top_50_skills['Gap_Score'] = top_50_skills['Readiness_Score'] - top_50_skills['Market_Importance']
+
+print("\n=== SKILL GAP ANALYSIS (Top 20) ===")
+analysis_df = top_50_skills[['Skill', 'Market_Importance', 'Readiness_Score', 'Gap_Score']].head(20)
+print(analysis_df)
+```
+
+```{python}
+# Create a comparison visualization
+fig, axes = plt.subplots(2, 2, figsize=(16, 12))
+
+# 1. Skills you have - compare proficiency to demand
+skills_you_have = top_50_skills[top_50_skills['Team_Proficiency'] > 0].head(10)
+
+ax1 = axes[0, 0]
+x = np.arange(len(skills_you_have))
+width = 0.35
+
+bars1 = ax1.barh(x - width/2, skills_you_have['Market_Importance'], width, 
+                 label='Market Importance', color='coral', alpha=0.8)
+bars2 = ax1.barh(x + width/2, skills_you_have['Readiness_Score'], width, 
+                 label='Your Readiness', color='skyblue', alpha=0.8)
+
+ax1.set_yticks(x)
+ax1.set_yticklabels(skills_you_have['Skill'], fontsize=9)
+ax1.set_xlabel('Score (0-100)')
+ax1.set_title('Skills You Have: Market Demand vs Your Proficiency', fontweight='bold')
+ax1.legend()
+ax1.invert_yaxis()
+
+# 2. Team proficiency heatmap
+ax2 = axes[0, 1]
+sns.heatmap(df_skills.T, annot=True, fmt='.0f', cmap='RdYlGn', vmin=1, vmax=5, 
+            ax=ax2, cbar_kws={'label': 'Proficiency (1-5)'})
+ax2.set_title('Team Member Proficiency Levels', fontweight='bold')
+ax2.set_xlabel('Team Member')
+ax2.set_ylabel('Skill')
+
+# 3. Top missing skills by market demand
+missing_skills = top_50_skills[top_50_skills['Team_Proficiency'] == 0].head(15)
+
+ax3 = axes[1, 0]
+sns.barplot(data=missing_skills, y='Skill', x='Number_of_Jobs', 
+            palette='Reds_r', ax=ax3)
+ax3.set_title('Top 15 Skills You Need to Learn', fontweight='bold')
+ax3.set_xlabel('Number of Jobs Requiring This Skill')
+
+# 4. Gap analysis scatter plot
+ax4 = axes[1, 1]
+colors = ['red' if gap < -20 else 'orange' if gap < 0 else 'green' 
+          for gap in top_50_skills['Gap_Score'].head(20)]
+
+ax4.scatter(top_50_skills['Market_Importance'].head(20), 
+           top_50_skills['Readiness_Score'].head(20),
+           s=top_50_skills['Number_of_Jobs'].head(20)/50,
+           c=colors, alpha=0.6)
+
+# Add diagonal line (perfect match)
+max_val = max(top_50_skills['Market_Importance'].max(), 
+              top_50_skills['Readiness_Score'].max())
+ax4.plot([0, max_val], [0, max_val], 'k--', alpha=0.3, label='Perfect Match')
+
+ax4.set_xlabel('Market Importance')
+ax4.set_ylabel('Your Readiness Score')
+ax4.set_title('Gap Analysis: Are You Ready for Market Demand?', fontweight='bold')
+ax4.legend(['Perfect Match', 'Below line = Need to improve'])
+ax4.grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+```
+
+```{python}
+# Function to create individual analysis (FOCUSED VERSION)
+def analyze_individual(person_name, person_skills, top_50_skills):
+    """Analyze only the 4 specific skills being tracked"""
+    
+    print("\n" + "="*80)
+    print(f"📊 INDIVIDUAL ANALYSIS: {person_name.upper()}")
+    print("="*80)
+    
+    # Get person's proficiency for each skill
+    def get_person_proficiency(skill_match):
+        """Get this person's proficiency if they have the skill"""
+        if '✓ YES' in skill_match:
+            team_skill = skill_match.split('(')[1].split(')')[0]
+            if team_skill in person_skills.index:
+                return person_skills[team_skill]
+        return 0
+    
+    # Create individual dataframe
+    individual_df = top_50_skills.copy()
+    individual_df[f'{person_name}_Proficiency'] = individual_df['Team_Has_It'].apply(get_person_proficiency)
+    
+    # Calculate scores
+    individual_df[f'{person_name}_Readiness'] = (individual_df[f'{person_name}_Proficiency'] / 5) * 100
+    max_demand = individual_df['Number_of_Jobs'].max()
+    individual_df['Market_Importance'] = (individual_df['Number_of_Jobs'] / max_demand) * 100
+    individual_df[f'{person_name}_Gap'] = individual_df[f'{person_name}_Readiness'] - individual_df['Market_Importance']
+    
+    # 1. Current Skills Summary
+    print(f"\n🎯 {person_name}'s Current Skill Levels:")
+    for skill, level in person_skills.items():
+        proficiency = ['Beginner', 'Basic', 'Intermediate', 'Advanced', 'Expert']
+        status = '✅ Job-Ready' if level >= 4 else '⚠️ Needs Work'
+        print(f"  • {skill}: {level}/5 ({proficiency[int(level)-1]}) {status}")
+    
+    # 2. Average proficiency across the 4 tracked skills
+    avg_proficiency = person_skills.mean()
+    job_ready_count = (person_skills >= 4).sum()
+    
+    print(f"\n📊 Summary of Your 4 Focus Skills:")
+    print(f"  • Job-Ready Skills (4+): {job_ready_count}/4")
+    print(f"  • Average proficiency: {avg_proficiency:.1f}/5")
+    
+    # 3. Strengths (Skills at 4+)
+    print(f"\n💪 {person_name}'s STRENGTHS (Skills at 4+ level):")
+    strengths = person_skills[person_skills >= 4]
+    if len(strengths) > 0:
+        for skill, level in strengths.items():
+            # Find market demand for this skill
+            skill_rows = individual_df[individual_df['Team_Has_It'].str.contains(skill, na=False, case=False)]
+            jobs = skill_rows['Number_of_Jobs'].iloc[0] if len(skill_rows) > 0 else 0
+            print(f"  ✅ {skill}: {level}/5 → Opens access to {jobs:,} jobs")
+    else:
+        print(f"  None yet (no skills at 4+)")
+        print(f"  💡 Focus on getting at least one skill to 4+ for job-readiness")
+    
+    # 4. Skills needing improvement
+    print(f"\n📚 {person_name} SHOULD IMPROVE (Skills below 4):")
+    to_improve = person_skills[person_skills < 4]
+    if len(to_improve) > 0:
+        for skill, level in to_improve.items():
+            target = 4
+            improvement_needed = target - level
+            
+            # Find market demand
+            skill_rows = individual_df[individual_df['Team_Has_It'].str.contains(skill, na=False, case=False)]
+            jobs = skill_rows['Number_of_Jobs'].iloc[0] if len(skill_rows) > 0 else 0
+            
+            print(f"  ⚠️ {skill}: {level}/5 → Target: {target}/5 (improve by {improvement_needed})")
+            print(f"     └─ Potential: {jobs:,} jobs once you reach 4+")
+    else:
+        print(f"  🌟 All skills are job-ready! Consider deepening expertise to 5/5")
+    
+    # 5. Priority recommendation
+    print(f"\n🎯 PRIORITY RECOMMENDATION FOR {person_name}:")
+    if len(to_improve) > 0:
+        # Find the skill with highest market demand that needs improvement
+        priority_skill = None
+        max_jobs = 0
+        for skill, level in to_improve.items():
+            skill_rows = individual_df[individual_df['Team_Has_It'].str.contains(skill, na=False, case=False)]
+            jobs = skill_rows['Number_of_Jobs'].iloc[0] if len(skill_rows) > 0 else 0
+            if jobs > max_jobs:
+                max_jobs = jobs
+                priority_skill = skill
+        
+        if priority_skill:
+            current = person_skills[priority_skill]
+            gap = 4 - current
+            print(f"  Focus on: {priority_skill}")
+            print(f"  Current: {current}/5 → Target: 4/5 (Gap: {gap} levels)")
+            print(f"  Why: Highest market demand ({max_jobs:,} jobs) among skills you need to improve")
+    else:
+        print(f"  All 4 focus skills are job-ready!")
+        print(f"  Next step: Build portfolio projects or learn complementary skills")
+    
+    return individual_df, avg_proficiency
+
+
+# Run analysis for each team member
+results = {}
+for member in df_skills.index:
+    person_skills = df_skills.loc[member]
+    individual_analysis, avg_prof = analyze_individual(member, person_skills, top_50_skills)
+    results[member] = {
+        'analysis': individual_analysis,
+        'avg_proficiency': avg_prof,
+        'skills': person_skills
+    }
+```
+
