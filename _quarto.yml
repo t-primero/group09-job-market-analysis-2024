@@ -1,5 +1,8 @@
 project:
   type: website
+  render:
+    - "*.qmd"
+    - "!eda.qmd"  # This excludes eda.qmd from rendering
   output-dir: docs
 
 website:

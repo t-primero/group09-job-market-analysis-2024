@@ -25,5 +25,14 @@
   },
   "RandomForest.qmd": {
     "RandomForest.html": "641278a2"
+  },
+  "skill_gap_analysis.qmd": {
+    "skill_gap_analysis.html": "5a055cda"
+  },
+  "tech_hub_analysis.qmd": {
+    "tech_hub_analysis.html": "8066b510"
+  },
+  "eda.qmd": {
+    "eda.html": "ef3cc8dc"
   }
 }

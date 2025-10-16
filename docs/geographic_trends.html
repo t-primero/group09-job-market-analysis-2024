@@ -3913,7 +3913,7 @@ vertical-align: -.125em;
 </header>
 
 
-<div id="17244e60" class="cell" data-execution_count="1">
+<div id="7e390595" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> SparkSession, functions <span class="im">as</span> F</span>
@@ -3926,7 +3926,7 @@ vertical-align: -.125em;
 </div>
 <p>Overview Geographic EDA using Lightcast cleaned Spark DataFrame df. Focus on states, remote share, salaries, and hubs.</p>
 <p>Top 10 States by Job postings</p>
-<div id="f8707c05" class="cell" data-execution_count="2">
+<div id="a39f2d65" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>state_counts <span class="op">=</span> (df.groupBy(<span class="st">&quot;STATE_NAME&quot;</span>)</span>
@@ -3952,7 +3952,7 @@ vertical-align: -.125em;
 </div>
 </div>
 <p>Remote vs Onsite Share by Industry</p>
-<div id="c2e00e7a" class="cell" data-execution_count="3">
+<div id="553e003d" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>remote_ind <span class="op">=</span> (df.groupBy(<span class="st">&quot;NAICS2_NAME&quot;</span>,<span class="st">&quot;REMOTE_TYPE&quot;</span>)</span>
@@ -3986,7 +3986,7 @@ vertical-align: -.125em;
 </div>
 </div>
 <p>Average Salary by State</p>
-<div id="638feea1" class="cell" data-execution_count="4">
+<div id="23a984be" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>state_salary <span class="op">=</span> (df.select(<span class="st">&quot;STATE_NAME&quot;</span>,<span class="st">&quot;SALARY&quot;</span>)</span>
@@ -4016,7 +4016,7 @@ vertical-align: -.125em;
 </div>
 </div>
 <p>Tech Hubs vs Emerging Locations</p>
-<div id="cb0ffc51" class="cell" data-execution_count="5">
+<div id="2669425a" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>hub <span class="op">=</span> (df.withColumn(<span class="st">&quot;hub_label&quot;</span>,</span>
@@ -4043,7 +4043,7 @@ vertical-align: -.125em;
 </div>
 </div>
 <p>Top states by postings</p>
-<div id="740c9166" class="cell" data-execution_count="6">
+<div id="4de1caec" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>top_states <span class="op">=</span> df.groupBy(<span class="st">&quot;STATE_NAME&quot;</span>).count().orderBy(<span class="st">&quot;count&quot;</span>, ascending<span class="op">=</span><span class="va">False</span>).limit(<span class="dv">15</span>).toPandas()</span>
@@ -4062,7 +4062,7 @@ vertical-align: -.125em;
 </div>
 </div>
 <p>Top states by remote share</p>
-<div id="89d9635a" class="cell" data-execution_count="7">
+<div id="7d93d583" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>state_remote_pdf <span class="op">=</span> df.groupBy(<span class="st">&quot;STATE_NAME&quot;</span>,<span class="st">&quot;REMOTE_TYPE&quot;</span>).count().toPandas()</span>
