@@ -221,28 +221,38 @@ Feature importance determines which variables used in the model had the most inf
 The graph below shows the top 20 variables used.
 
 ```{python}
-rf_stage = model.stages[-1] 
-importances = np.array(rf_stage.featureImportances.toArray()) 
+rf_stage = model.stages[-1]
+importances = np.array(rf_stage.featureImportances.toArray())
 
-meta = pred.schema["features"].metadata["ml_attr"]["attrs"] 
-attrs = sorted([*meta.get("binary", []), *meta.get("numeric", [])], 
-key=lambda a: a["idx"]) 
-feature_names = [a["name"] for a in attrs] 
+meta = pred.schema["features"].metadata["ml_attr"]["attrs"]
+attrs = sorted([*meta.get("binary", []), *meta.get("numeric", [])], key=lambda a: a["idx"])
+feature_names = [a["name"] for a in attrs]
 
-topn = 20 
-feat_imp = (pd.DataFrame({"Feature": feature_names, "Importance": importances}) 
-    .sort_values("Importance", ascending=False) 
-    .head(topn)) 
+topn = 20
+feat_imp = (pd.DataFrame({"Feature": feature_names, "Importance": importances})
+              .sort_values("Importance", ascending=False)
+              .head(topn))
 
-plt.figure(figsize=(8, 6)) 
-sns.barplot(data=feat_imp, x="Importance", y="Feature") 
-plt.title(f"Top {topn} Random Forest Feature Importances") 
-plt.xlabel("Importance"); plt.ylabel("Feature") 
-plt.tight_layout() 
+def clean_label(s: str) -> str:
+    s = re.sub(r'(_ohe|_idx)$', '', s)
+    s = s.replace("MIN_EDULEVELS","Education") \
+         .replace("NAICS2_NAME","Industry") \
+         .replace("STATE_NAME","State") \
+         .replace("REMOTE_TYPE","Remote")
+    return textwrap.shorten(s, width=28, placeholder="…")  # wrap/shorten
+feat_imp["Label"] = feat_imp["Feature"].map(clean_label)
+
+plt.figure(figsize=(9,6))
+sns.barplot(data=feat_imp, x="Importance", y="Label")
+plt.title(f"Top {topn} Random Forest Feature Importances")
+plt.xlabel("Importance"); plt.ylabel("Feature")
+plt.tight_layout()
 plt.show()
 ```
 Interpretation: Despite a relatively lower R squared value below 20% - this chart clearly shows 
-that state (and ultimately location) has less influence on the amount of salary an employee receives compared to their education, position, and field. 
+that state (and ultimately location) has less influence on the amount of salary an employee receives compared to their education, position, and field.
+
+
 
 
 **Predictive Analysis**
